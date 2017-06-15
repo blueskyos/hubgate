@@ -1,13 +1,12 @@
 FROM ubuntu:16.04
 
-RUN apt-get update \
-    && apt-get -qq --no-install-recommends install \
-        ca-certificates \
-        wget \
-    && rm -r /var/lib/apt/lists/*
+RUN apt-get update -qq
 
-RUN wget -q --content-disposition https://minergate.com/download/deb-cli \
-    && dpkg -i *.deb \
-    && rm *.deb
+RUN apt-get install -qy build-essential git libtool libjansson* libssl-dev libcurl4-openssl-dev libncurses5-dev libgmp-dev automake
 
-ENTRYPOINT ["minergate-cli"]
+RUN git clone https://github.com/JayDDee/cpuminer-opt 
+
+RUN cd cpuminer-opt && ./build.sh  \
+    && make install \
+    && cd .. \
+    && rm -rf cpuminer-opt
